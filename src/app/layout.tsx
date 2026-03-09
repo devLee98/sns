@@ -1,3 +1,6 @@
+import { SunIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 import Providers from "./provider";
 
@@ -9,7 +12,35 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex min-h-screen flex-col">
+            <header className="h-15 border-b">
+              <div className="m-auto flex h-full w-full max-w-175 justify-between px-4">
+                <Link href={"/"} className="flex items-center gap-2">
+                  <Image src={"/logo.png"} alt="logo" width={20} height={20} />
+                  <div>SNS</div>
+                </Link>
+                <div className="flex items-center gap-5">
+                  <div className="hover:bg-muted cursor-pointer rounded-full p-2">
+                    <SunIcon />
+                  </div>
+                  <Image
+                    src={"/default-avatar.png"}
+                    alt="logo"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+              </div>
+            </header>
+            <main className="m-auto w-full max-w-175 flex-1 border-x px-4 py-6">
+              {children}
+            </main>
+            <footer className="text-muted-foreground border-t py-10 text-center">
+              @이영찬
+            </footer>
+          </div>
+        </Providers>
       </body>
     </html>
   );
