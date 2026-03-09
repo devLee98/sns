@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/client";
-import { Provider } from "@supabase/supabase-js";
 
 export async function signUp({
   email,
@@ -26,28 +25,6 @@ export async function signInWithPassword({
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
-  });
-  if (error) throw error;
-  return data;
-}
-
-export async function signInWithGithub({ provider }: { provider: Provider }) {
-  const supabase = createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
-    options: { redirectTo: `${window.location.origin}/auth/callback` },
-  });
-  if (error) throw error;
-  return data;
-}
-
-export async function signInWithKakao({ provider }: { provider: Provider }) {
-  const supabase = createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-    },
   });
   if (error) throw error;
   return data;

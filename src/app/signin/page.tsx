@@ -1,35 +1,23 @@
-"use client";
+﻿"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSignInWithGithub } from "@/hooks/mutations/usesigninwithgithub";
-import { useSignInWithKakao } from "@/hooks/mutations/usesigninwithkakao";
 import { useSignInWithPassword } from "@/hooks/mutations/usesigninwithpassword";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function SignInPage() {
-  const { mutate: signin, isPending: isSigninPending } =
-    useSignInWithPassword();
-  const { mutate: signinWithGithub, isPending: isSigninWithGithubPending } =
-    useSignInWithGithub();
-  const { mutate: signinWithKakao, isPending: isSigninWithKakaoPending } =
-    useSignInWithKakao();
+  const { mutate: signIn, isPending } = useSignInWithPassword();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignin = () => {
-    if (email.trim() === "") return;
-    if (password.trim() === "") return;
-    signin({ email, password });
-  };
+  const handleSignIn = () => {
+    const cleanEmail = email.trim();
+    const cleanPassword = password.trim();
 
-  const handleSigninWithGithub = () => {
-    signinWithGithub({ provider: "github" });
-  };
+    if (!cleanEmail || !cleanPassword) return;
 
-  const handleSigninWithKakao = () => {
-    signinWithKakao({ provider: "kakao" });
+    signIn({ email: cleanEmail, password: cleanPassword });
   };
 
   return (
@@ -52,28 +40,14 @@ export default function SignInPage() {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Button
-          className="w-full"
-          onClick={handleSignin}
-          disabled={isSigninPending}
-        >
+        <Button className="w-full" onClick={handleSignIn} disabled={isPending}>
           로그인
         </Button>
-        <Button
-          className="w-full"
-          variant="outline"
-          onClick={handleSigninWithGithub}
-          disabled={isSigninWithGithubPending}
-        >
-          깃허브 로그인
+        <Button className="w-full" variant="outline" asChild>
+          <Link href="/auth/signin/github">깃허브 로그인</Link>
         </Button>
-        <Button
-          className="w-full"
-          variant="outline"
-          onClick={handleSigninWithKakao}
-          disabled={isSigninWithKakaoPending}
-        >
-          카카오 로그인
+        <Button className="w-full" variant="outline" asChild>
+          <Link href="/auth/signin/kakao">카카오 로그인</Link>
         </Button>
       </div>
       <div>
