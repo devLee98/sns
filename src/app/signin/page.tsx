@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSignInWithOAuth } from "@/hooks/mutations/usesigninwirhoauth";
+import { useSignInWithGithub } from "@/hooks/mutations/usesigninwithgithub";
+import { useSignInWithKakao } from "@/hooks/mutations/usesigninwithkakao";
 import { useSignInWithPassword } from "@/hooks/mutations/usesigninwithpassword";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,8 +11,10 @@ import { useState } from "react";
 export default function SignInPage() {
   const { mutate: signin, isPending: isSigninPending } =
     useSignInWithPassword();
-  const { mutate: signinWithOAuth, isPending: isSigninWithOAuthPending } =
-    useSignInWithOAuth();
+  const { mutate: signinWithGithub, isPending: isSigninWithGithubPending } =
+    useSignInWithGithub();
+  const { mutate: signinWithKakao, isPending: isSigninWithKakaoPending } =
+    useSignInWithKakao();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,8 +24,12 @@ export default function SignInPage() {
     signin({ email, password });
   };
 
-  const handleSigninWithOAuth = () => {
-    signinWithOAuth({ provider: "github" });
+  const handleSigninWithGithub = () => {
+    signinWithGithub({ provider: "github" });
+  };
+
+  const handleSigninWithKakao = () => {
+    signinWithKakao({ provider: "kakao" });
   };
 
   return (
@@ -55,10 +62,18 @@ export default function SignInPage() {
         <Button
           className="w-full"
           variant="outline"
-          onClick={handleSigninWithOAuth}
-          disabled={isSigninWithOAuthPending}
+          onClick={handleSigninWithGithub}
+          disabled={isSigninWithGithubPending}
         >
           깃허브 로그인
+        </Button>
+        <Button
+          className="w-full"
+          variant="outline"
+          onClick={handleSigninWithKakao}
+          disabled={isSigninWithKakaoPending}
+        >
+          카카오 로그인
         </Button>
       </div>
       <div>

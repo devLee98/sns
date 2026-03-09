@@ -31,11 +31,23 @@ export async function signInWithPassword({
   return data;
 }
 
-export async function signInWithOAuth({ provider }: { provider: Provider }) {
+export async function signInWithGithub({ provider }: { provider: Provider }) {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: { redirectTo: `${window.location.origin}/auth/callback` },
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function signInWithKakao({ provider }: { provider: Provider }) {
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
   });
   if (error) throw error;
   return data;
