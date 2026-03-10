@@ -47,12 +47,18 @@ export default async function SignInPage({
             <Link href="/auth/signin/kakao">카카오 로그인</Link>
           </Button>
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
           <Link
             href="/signup"
             className="text-muted-foreground text-sm hover:underline"
           >
             계정이 없으신가요?
+          </Link>
+          <Link
+            className="text-muted-foreground text-sm hover:underline"
+            href="/forgetpassword"
+          >
+            비밀번호를 잊어버리셨나요?
           </Link>
         </div>
       </div>

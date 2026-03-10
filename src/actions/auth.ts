@@ -47,3 +47,38 @@ export async function signInWithPasswordAction(formData: FormData) {
 
   redirect("/");
 }
+
+export async function requestResetPasswordAction(formData: FormData) {
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
+
+  if (!email) {
+    redirect("/forgetpassword?error=이메일을 입력하세요.");
+  }
+
+  const supabase = createClient(await cookies());
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/resetpassword`,
+  });
+
+  if (error) {
+    redirect(`/forgetpassword?error=${encodeURIComponent(error.message)}`);
+  }
+}
+
+export async function updatePasswordAction(formData: FormData) {
+  const password = String(formData.get("password") ?? "").trim();
+
+  if (!password) {
+    redirect("/resetpassword?error=비밀번호를 입력하세요.");
+  }
+
+  const supabase = createClient(await cookies());
+  const { data, error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    redirect(`/resetpassword?error=${encodeURIComponent(error.message)}`);
+  }
+  redirect("/");
+}
