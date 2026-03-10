@@ -1,5 +1,6 @@
 "use client";
 
+import { generateErrorMessage } from "@/lib/error";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -18,7 +19,7 @@ export default function AuthErrorToast({ error }: Props) {
     if (!error || shownRef.current) return;
     shownRef.current = true;
 
-    toast.error(error, { position: "top-center" });
+    toast.error(generateErrorMessage(error), { position: "top-center" });
 
     const params = new URLSearchParams(searchParams.toString());
     params.delete("error");
