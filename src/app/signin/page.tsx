@@ -1,46 +1,34 @@
-﻿"use client";
-
+﻿import { signInAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSignInWithPassword } from "@/hooks/mutations/usesigninwithpassword";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function SignInPage() {
-  const { mutate: signIn, isPending } = useSignInWithPassword();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSignIn = () => {
-    const cleanEmail = email.trim();
-    const cleanPassword = password.trim();
-
-    if (!cleanEmail || !cleanPassword) return;
-
-    signIn({ email: cleanEmail, password: cleanPassword });
-  };
-
   return (
     <div className="flex flex-col gap-8">
       <div className="text-xl font-bold">로그인</div>
       <div className="flex flex-col gap-2">
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일"
-          className="py-6"
-        />
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호"
-          className="py-6"
-        />
+        <form
+          id="signin-form"
+          action={signInAction}
+          className="flex flex-col gap-2"
+        >
+          <Input
+            name="email"
+            type="email"
+            placeholder="이메일"
+            className="py-6"
+          />
+          <Input
+            name="password"
+            type="password"
+            placeholder="비밀번호"
+            className="py-6"
+          />
+        </form>
       </div>
       <div className="flex flex-col gap-2">
-        <Button className="w-full" onClick={handleSignIn} disabled={isPending}>
+        <Button className="w-full" type="submit" form="signin-form">
           로그인
         </Button>
         <Button className="w-full" variant="outline" asChild>

@@ -1,48 +1,35 @@
-"use client";
-
+import { signUpAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSignUp } from "@/hooks/mutations/usesignup";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function SignUpPage() {
-  const { mutate: signup, isPending: isSignupPending } = useSignUp();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSignup = () => {
-    if (email.trim() === "") return;
-    if (password.trim() === "") return;
-    signup({ email, password });
-  };
-
   return (
     <div className="flex flex-col gap-8">
       <div className="text-xl font-bold">회원가입</div>
       <div className="flex flex-col gap-2">
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일"
-          className="py-6"
-        />
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호"
-          className="py-6"
-        />
+        <form
+          id="signup-form"
+          action={signUpAction}
+          className="flex flex-col gap-2"
+        >
+          <Input
+            type="email"
+            name="email"
+            placeholder="이메일"
+            className="py-6"
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="비밀번호"
+            className="py-6"
+          />
+        </form>
       </div>
       <div>
-        <Button
-          className="w-full"
-          onClick={handleSignup}
-          disabled={isSignupPending}
-        >
-          로그인
+        <Button className="w-full" type="submit" form="signup-form">
+          회원가입
         </Button>
       </div>
       <div>
