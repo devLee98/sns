@@ -1,20 +1,13 @@
-name: "Issue"
-description: "Report a bug or request a feature"
-title: "[Issue] "
+name: "이슈"
+description: "버그 제보 또는 기능 요청"
+title: "[이슈] "
 labels: ["triage"]
 body:
   - type: textarea
     id: summary
     attributes:
-      label: Summary
-      description: Briefly describe the issue.
-      placeholder: What happened? What do you want?
+      label: 요약
+      description: 이슈를 간단히 작성해주세요.
+      placeholder: 어떤 문제가 발생했는지, 무엇을 원하는지 적어주세요.
     validations:
       required: true
-
-  - type: textarea
-    id: details
-    attributes:
-      label: Details
-      description: Add context, repro steps, logs, or screenshots.
-      placeholder: Steps to reproduce, expected behavior, actual behavior...
