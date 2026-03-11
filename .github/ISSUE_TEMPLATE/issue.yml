@@ -1,63 +1,20 @@
-name: 이슈
-description: 버그/기능/개선 이슈 등록
-title: "[이슈] "
-labels:
-  - triage
+name: "Issue"
+description: "Report a bug or request a feature"
+title: "[Issue] "
+labels: ["triage"]
 body:
-  - type: checkboxes
-    id: issue_type
-    attributes:
-      label: 유형
-      options:
-        - label: 버그
-        - label: 기능 요청
-        - label: 개선/리팩터링
-        - label: 문서
-    validations:
-      required: true
-
   - type: textarea
     id: summary
     attributes:
-      label: 요약
-      placeholder: 이슈를 한두 문장으로 설명해주세요.
+      label: Summary
+      description: Briefly describe the issue.
+      placeholder: What happened? What do you want?
     validations:
       required: true
 
   - type: textarea
-    id: background
+    id: details
     attributes:
-      label: 배경/문제
-      placeholder: 현재 어떤 문제가 있거나 어떤 개선이 필요한지 작성해주세요.
-    validations:
-      required: true
-
-  - type: textarea
-    id: expected
-    attributes:
-      label: 기대 동작/제안 사항
-      placeholder: 원하는 동작 또는 제안하는 해결 방법을 적어주세요.
-
-  - type: textarea
-    id: reproduce
-    attributes:
-      label: 재현 방법 (버그인 경우)
-      placeholder: |
-        1. '...'로 이동
-        2. '...' 클릭
-        3. 오류 확인
-
-  - type: textarea
-    id: environment
-    attributes:
-      label: 실행 환경 (필요 시)
-      placeholder: |
-        - OS:
-        - 브라우저:
-        - 버전/커밋:
-
-  - type: textarea
-    id: extra
-    attributes:
-      label: 추가 참고 사항
-      placeholder: 관련 링크, 스크린샷, 참고 자료 등을 적어주세요.
+      label: Details
+      description: Add context, repro steps, logs, or screenshots.
+      placeholder: Steps to reproduce, expected behavior, actual behavior...
