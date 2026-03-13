@@ -1,12 +1,11 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/server";
+import { getRandomNickname } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function signUpAction(formData: FormData) {
-  // TODO(auth): 쿼리스트링 에러 전달 대신 flash cookie로 전환해서 화면 깜빡임 제거
-  // TODO(auth): 실패 시 이메일/비밀번호 입력값 초기화 정책 정리(회원가입/로그인 공통)
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
@@ -27,8 +26,6 @@ export async function signUpAction(formData: FormData) {
 }
 
 export async function signInWithPasswordAction(formData: FormData) {
-  // TODO(auth): 쿼리스트링 에러 전달 대신 flash cookie로 전환해서 화면 깜빡임 제거
-  // TODO(auth): 실패 시 이메일/비밀번호 입력값 초기화 정책 정리(회원가입/로그인 공통)
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
@@ -39,10 +36,34 @@ export async function signInWithPasswordAction(formData: FormData) {
   }
 
   const supabase = createClient(await cookies());
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
     redirect(`/signin?error=${encodeURIComponent(error.message)}`);
+  }
+  const userId = data.user?.id;
+  if (!userId) {
+    redirect("/signin?error=user_not_found");
+  }
+
+  const { error: profileError } = await supabase.from("profile").upsert(
+    {
+      id: userId,
+      nickname: getRandomNickname(),
+      bio: "",
+      avatar_url: data.user.user_metadata?.avatar_url ?? null,
+    },
+    {
+      onConflict: "id",
+      ignoreDuplicates: true,
+    },
+  );
+
+  if (profileError) {
+    redirect(`/signin?error=${encodeURIComponent(profileError.message)}`);
   }
 
   redirect("/");
