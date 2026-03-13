@@ -1,9 +1,10 @@
+import { createPostAction } from "@/actions/post";
+import PostEditModal from "@/components/modal/posteditmodal";
 import { SunIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
 import Providers from "./provider";
-import PostEditModal from "@/components/modal/posteditmodal";
 
 export default function RootLayout({
   children,
@@ -41,7 +42,7 @@ export default function RootLayout({
               @이영찬
             </footer>
           </div>
-          <PostEditModal />
+          <PostEditModal createPostAction={createPostAction} />
           <div id="modal-root" />
         </Providers>
       </body>
