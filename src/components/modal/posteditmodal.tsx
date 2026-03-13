@@ -48,7 +48,7 @@ export default function PostEditModal({
             name="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="max-h-125 min-h-25 focus:outline-none"
+            className="max-h-125 min-h-25 w-full focus:outline-none"
             placeholder="무슨 일이 있었나요?"
           />
         </form>
