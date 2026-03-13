@@ -1,6 +1,6 @@
 import { signUpAction } from "@/actions/auth";
+import { SignUpSubmitButton } from "@/components/signup/signup-submit-button";
 import AuthErrorToast from "@/components/toast/auth-error-toast";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
@@ -16,31 +16,31 @@ export default async function SignUpPage({
       <AuthErrorToast error={error} />
       <div className="flex flex-col gap-8">
         <div className="text-xl font-bold">회원가입</div>
-        <div className="flex flex-col gap-2">
-          <form
-            id="signup-form"
-            action={signUpAction}
-            className="flex flex-col gap-2"
-          >
-            <Input
-              type="email"
-              name="email"
-              placeholder="이메일"
-              className="py-6"
-            />
-            <Input
-              type="password"
-              name="password"
-              placeholder="비밀번호"
-              className="py-6"
-            />
-          </form>
-        </div>
-        <div>
-          <Button className="w-full" type="submit" form="signup-form">
-            회원가입
-          </Button>
-        </div>
+        <form
+          id="signup-form"
+          action={signUpAction}
+          className="flex flex-col gap-2"
+        >
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-2">
+              <Input
+                type="email"
+                name="email"
+                placeholder="이메일"
+                className="py-6"
+              />
+              <Input
+                type="password"
+                name="password"
+                placeholder="비밀번호"
+                className="py-6"
+              />
+            </div>
+            <div>
+              <SignUpSubmitButton />
+            </div>
+          </div>
+        </form>
         <div>
           <Link
             href="/signin"

@@ -12,14 +12,16 @@ export async function signUpAction(formData: FormData) {
   const password = String(formData.get("password") ?? "").trim();
 
   if (!email || !password) {
-    redirect("/signin?error=이메일과 비밀번호를 입력하세요.");
+    redirect(
+      `/signup?error=${encodeURIComponent("이메일과 비밀번호를 입력하세요.")}`,
+    );
   }
 
   const supabase = createClient(await cookies());
   const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
-    redirect(`/signin?error=${encodeURIComponent(error.message)}`);
+    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
   redirect("/");
@@ -32,7 +34,9 @@ export async function signInWithPasswordAction(formData: FormData) {
   const password = String(formData.get("password") ?? "").trim();
 
   if (!email || !password) {
-    redirect("/signin?error=이메일과 비밀번호를 입력하세요.");
+    redirect(
+      `/signin?error=${encodeURIComponent("이메일과 비밀번호를 입력하세요.")}`,
+    );
   }
 
   const supabase = createClient(await cookies());
@@ -46,7 +50,7 @@ export async function signInWithPasswordAction(formData: FormData) {
   }
   const userId = data.user?.id;
   if (!userId) {
-    redirect("/signin?error=user_not_found");
+    redirect(`/signin?error=${encodeURIComponent("user_not_found")}`);
   }
 
   const { error: profileError } = await supabase.from("profile").upsert(
@@ -75,7 +79,9 @@ export async function requestResetPasswordAction(formData: FormData) {
     .toLowerCase();
 
   if (!email) {
-    redirect("/forgetpassword?error=이메일을 입력하세요.");
+    redirect(
+      `/forgetpassword?error=${encodeURIComponent("이메일을 입력하세요.")}`,
+    );
   }
 
   const supabase = createClient(await cookies());
@@ -92,7 +98,9 @@ export async function updatePasswordAction(formData: FormData) {
   const password = String(formData.get("password") ?? "").trim();
 
   if (!password) {
-    redirect("/resetpassword?error=비밀번호를 입력하세요.");
+    redirect(
+      `/resetpassword?error=${encodeURIComponent("비밀번호를 입력하세요.")}`,
+    );
   }
 
   const supabase = createClient(await cookies());
