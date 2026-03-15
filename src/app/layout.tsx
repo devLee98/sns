@@ -1,4 +1,4 @@
-import { createPostAction } from "@/actions/post";
+import { createWithdImagesAction } from "@/actions/post";
 import PostEditModal from "@/components/modal/posteditmodal";
 import { SunIcon } from "lucide-react";
 import Image from "next/image";
@@ -42,7 +42,7 @@ export default function RootLayout({
               @이영찬
             </footer>
           </div>
-          <PostEditModal createPostAction={createPostAction} />
+          <PostEditModal createWithdImagesAction={createWithdImagesAction} />
           <div id="modal-root" />
         </Providers>
       </body>
