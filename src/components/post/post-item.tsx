@@ -6,15 +6,18 @@ import {
 } from "@/components/ui/carousel";
 import type { Post } from "@/lib/types";
 import { HeartIcon, MessageCircle } from "lucide-react";
+import Image from "next/image";
 
 export default function PostItem(post: Post) {
   return (
     <div className="flex flex-col gap-4 border-b pb-8">
       <div className="flex justify-between">
         <div className="flex items-start gap-4">
-          <img
+          <Image
             src={post.author.avatar_url || "/default-avatar.png"}
-            alt={`${post.author.nickname}의 프로필 이미지`}
+            alt=""
+            width={40}
+            height={40}
             className="h-10 w-10 rounded-full object-cover"
           />
           <div>
@@ -47,8 +50,11 @@ export default function PostItem(post: Post) {
             {post.image_urls?.map((url, index) => (
               <CarouselItem className={`basis-3/5`} key={index}>
                 <div className="overflow-hidden rounded-xl">
-                  <img
+                  <Image
                     src={url}
+                    alt=""
+                    width={300}
+                    height={300}
                     className="h-full max-h-[350px] w-full object-cover"
                   />
                 </div>
