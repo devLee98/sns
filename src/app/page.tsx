@@ -1,3 +1,4 @@
+import PostFeed from "@/components/post/post-feed";
 import PostButton from "@/components/post/postbutton";
 import PostErrorToast from "@/components/toast/post-error-toast";
 import PostSuccessToast from "@/components/toast/post-success-toast";
@@ -13,6 +14,7 @@ export default async function Home({
       <PostSuccessToast success={success ?? null} />
       <div className="flex flex-col gap-10">
         <PostButton />
+        <PostFeed />
       </div>
     </>
   );

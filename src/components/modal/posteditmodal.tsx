@@ -62,6 +62,7 @@ export default function PostEditModal({
     setImages((prev) =>
       prev.filter((img) => img.previewUrl !== image.previewUrl),
     );
+    URL.revokeObjectURL(image.previewUrl); //메모리 누수 방지
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,6 +80,13 @@ export default function PostEditModal({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [content]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      images.forEach((image) => URL.revokeObjectURL(image.previewUrl)); //메모리 누수 방지
+      return;
+    }
+  }, [isOpen]);
 
   // 서버에서는 바로 null 반환 (document 없음)
   if (typeof window === "undefined") {
