@@ -1,6 +1,7 @@
 "use client";
 
-import { usePostEditModal } from "@/app/store/posteditmodal";
+import { useOpenAlertModal } from "@/app/store/alert-modal";
+import { usePostEditModal } from "@/app/store/post-edit-modal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ImageIcon, XIcon } from "lucide-react";
@@ -20,15 +21,31 @@ export default function PostEditModal({
   createWithdImagesAction: (formData: FormData) => Promise<void>;
 }) {
   const { isOpen, close } = usePostEditModal();
+  const openAlertModal = useOpenAlertModal();
 
   const [content, setContent] = useState("");
   const [images, setImages] = useState<Image[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const handleCloseModal = () => {
+  const resetAndCloseModal = () => {
     setContent("");
     setImages([]);
     close();
+  };
+  const handleCloseModal = () => {
+    if (content !== "" || images.length > 0) {
+      openAlertModal({
+        title: "게시글 작성이 마무리되지 않았습니다.",
+        description: "게시글 작성을 취소하시겠습니까?",
+        onPositive: () => {
+          resetAndCloseModal();
+        },
+        onNegative: () => {},
+      });
+
+      return;
+    }
+    resetAndCloseModal();
   };
   const handleSelectImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -46,6 +63,7 @@ export default function PostEditModal({
     setImages((prev) =>
       prev.filter((img) => img.previewUrl !== image.previewUrl),
     );
+    URL.revokeObjectURL(image.previewUrl); //메모리 누수 방지
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +72,7 @@ export default function PostEditModal({
     formData.append("content", content);
     images.forEach((img) => formData.append("image", img.file));
     await createWithdImagesAction(formData);
-    handleCloseModal();
+    resetAndCloseModal();
   };
 
   useEffect(() => {
@@ -63,6 +81,13 @@ export default function PostEditModal({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [content]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      images.forEach((image) => URL.revokeObjectURL(image.previewUrl)); //메모리 누수 방지
+      return;
+    }
+  }, [isOpen, images]);
 
   // 서버에서는 바로 null 반환 (document 없음)
   if (typeof window === "undefined") {
@@ -74,7 +99,12 @@ export default function PostEditModal({
   if (!modalRoot) return null;
 
   return createPortal(
-    <Dialog open={isOpen} onOpenChange={handleCloseModal}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) handleCloseModal();
+      }}
+    >
       <DialogContent className="max-h-[90vh]">
         <DialogTitle>포스트 작성</DialogTitle>
         <form id="post-edit-form" onSubmit={handleSubmit}>

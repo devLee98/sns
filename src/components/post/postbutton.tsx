@@ -1,6 +1,6 @@
 "use client";
 
-import { useOpenPostEditModal } from "@/app/store/posteditmodal";
+import { useOpenPostEditModal } from "@/app/store/post-edit-modal";
 import { PlusCircleIcon } from "lucide-react";
 
 export default function PostButton() {

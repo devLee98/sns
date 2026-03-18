@@ -1,6 +1,6 @@
 "use client";
 
-import { useClosePostEditModal } from "@/app/store/posteditmodal";
+import { useClosePostEditModal } from "@/app/store/post-edit-modal";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";

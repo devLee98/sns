@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
 import Providers from "./provider";
+import AlertModal from "@/components/modal/alert-modal";
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
             </footer>
           </div>
           <PostEditModal createWithdImagesAction={createWithdImagesAction} />
+          <AlertModal />
           <div id="modal-root" />
         </Providers>
       </body>
