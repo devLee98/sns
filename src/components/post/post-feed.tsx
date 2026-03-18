@@ -1,15 +1,13 @@
-"use client";
-import { usePostData } from "@/hooks/queries/use-post-data";
-import Fallback from "../fallback";
-import Loader from "../loader";
+import { fetchPostsAction } from "@/lib/server-queries/post";
 import PostItem from "./post-item";
 
-export default function PostFeed() {
-  const { data, isPending, error } = usePostData();
+export default async function PostFeed() {
+  const data = await fetchPostsAction();
+  // const { data, isPending, error } = usePostData();
 
-  if (isPending) return <Loader />;
+  // if (isPending) return <Loader />;
 
-  if (error) return <Fallback />;
+  // if (error) return <Fallback />;
 
   return (
     <div className="flex flex-col gap-10">
