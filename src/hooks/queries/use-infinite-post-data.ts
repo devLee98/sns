@@ -1,4 +1,4 @@
-import { fetchPosts } from "@/lib/client-queries/post";
+import { fetchPostsClient } from "@/lib/client-queries/post";
 import { QUERY_KEYS } from "@/lib/constants";
 import { Post } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ export default function useInfinitePostData(initialPosts: Post[]) {
     queryFn: async ({ pageParam = 1 }) => {
       const from = pageParam * PageSize;
       const to = from + PageSize - 1;
-      const posts = await fetchPosts({ from, to });
+      const posts = await fetchPostsClient({ from, to });
       return posts;
     },
     initialPageParam: 1,

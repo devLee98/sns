@@ -1,6 +1,12 @@
 import { createClient } from "@/lib/client";
 
-export async function fetchPosts({ from, to }: { from: number; to: number }) {
+export async function fetchPostsClient({
+  from,
+  to,
+}: {
+  from: number;
+  to: number;
+}) {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("post")
