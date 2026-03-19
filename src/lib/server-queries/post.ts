@@ -2,19 +2,29 @@ import { createClient } from "@/lib/server";
 import { cookies } from "next/headers";
 
 export async function fetchPostsServer({
-  from,
-  to,
+  cursor,
+  limit,
 }: {
-  from: number;
-  to: number;
+  cursor: number | null;
+  limit: number;
 }) {
   const supabase = createClient(await cookies());
-  const { data, error } = await supabase
+  let query = supabase
     .from("post")
     .select("*, author: profile!author_id(*)")
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .order("id", { ascending: false }) // 커서 기준 컬럼
+    .limit(limit + 1);
+
+  if (cursor !== null) {
+    query = query.lt("id", cursor); // cursor보다 작은 id만
+  }
+
+  const { data, error } = await query;
 
   if (error) throw new Error(error.message);
-  return data;
+  const hasMore = data.length > limit;
+  const posts = hasMore ? data.slice(0, limit) : data;
+  const nextCursor = hasMore ? posts[posts.length - 1].id : null;
+
+  return { posts, nextCursor };
 }

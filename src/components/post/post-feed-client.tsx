@@ -10,20 +10,24 @@ import PostItem from "./post-item";
 
 type Props = {
   initialPosts: Post[];
+  initialNextCursor: number | null;
 };
 
-export default function PostFeedClient({ initialPosts }: Props) {
+export default function PostFeedClient({
+  initialPosts,
+  initialNextCursor,
+}: Props) {
   const { ref, inView } = useInView();
   const { data, fetchNextPage, isFetchingNextPage, error } =
-    useInfinitePostData(initialPosts);
+    useInfinitePostData({ initialPosts, initialNextCursor });
   useEffect(() => {
     if (inView) {
       fetchNextPage();
     }
   }, [inView]);
 
-  const posts = data?.pages.flat() ?? [];
-
+  // const posts = data?.pages.flat() ?? [];
+  const posts = data?.pages.flatMap((page) => page.posts) ?? [];
   if (error) return <Fallback />;
   return (
     <div className="flex flex-col gap-10">

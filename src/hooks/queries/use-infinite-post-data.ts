@@ -3,25 +3,24 @@ import { QUERY_KEYS } from "@/lib/constants";
 import { Post } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const PageSize = 5;
+type UseInfinitePostDataParams = {
+  initialPosts: Post[];
+  initialNextCursor: number | null;
+};
 
-export default function useInfinitePostData(initialPosts: Post[]) {
+export default function useInfinitePostData({
+  initialPosts,
+  initialNextCursor,
+}: UseInfinitePostDataParams) {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.post.list,
-    queryFn: async ({ pageParam = 1 }) => {
-      const from = pageParam * PageSize;
-      const to = from + PageSize - 1;
-      const posts = await fetchPostsClient({ from, to });
-      return posts;
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < PageSize) return undefined;
-      return allPages.length;
-    },
+    queryFn: ({ pageParam }: { pageParam: number | null }) =>
+      fetchPostsClient({ cursor: pageParam, limit: 5 }),
+    initialPageParam: null as number | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     initialData: {
-      pages: [initialPosts],
-      pageParams: [0],
+      pages: [{ posts: initialPosts, nextCursor: initialNextCursor }],
+      pageParams: [null as number | null],
     },
   });
 }
