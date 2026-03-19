@@ -12,16 +12,16 @@ export async function fetchPostsServer({
   let query = supabase
     .from("post")
     .select("*, author: profile!author_id(*)")
-    .order("id", { ascending: false }) // 커서 기준 컬럼
+    .order("id", { ascending: false }) // 커서(id) 기준 컬럼
     .limit(limit + 1);
 
   if (cursor !== null) {
-    query = query.lt("id", cursor); // cursor보다 작은 id만
+    query = query.lt("id", cursor); // cursor보다 작은 id만 요청
   }
 
   const { data, error } = await query;
-
   if (error) throw new Error(error.message);
+
   const hasMore = data.length > limit;
   const posts = hasMore ? data.slice(0, limit) : data;
   const nextCursor = hasMore ? posts[posts.length - 1].id : null;
