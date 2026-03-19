@@ -18,15 +18,28 @@ export default function PostFeedClient({
   initialNextCursor,
 }: Props) {
   const { ref, inView } = useInView();
-  const { data, fetchNextPage, isFetchingNextPage, error } =
+  const { data, fetchNextPage, isFetchingNextPage, error, hasNextPage } =
     useInfinitePostData({ initialPosts, initialNextCursor });
+  console.log(data);
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // const posts = data?.pages.flat() ?? [];
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+
+    return () => {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "auto";
+      }
+    };
+  }, []);
+
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
   if (error) return <Fallback />;
   return (
