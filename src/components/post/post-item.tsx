@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -7,8 +6,16 @@ import {
 import type { Post } from "@/lib/types";
 import { HeartIcon, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import DeleteButton from "./delete-button";
+import EditButton from "./edit-button";
 
-export default function PostItem(post: Post) {
+export default function PostItem({
+  post,
+  UserId,
+}: {
+  post: Post;
+  UserId: string;
+}) {
   return (
     <div className="flex flex-col gap-4 border-b pb-8">
       <div className="flex justify-between">
@@ -31,12 +38,8 @@ export default function PostItem(post: Post) {
         </div>
 
         <div className="text-muted-foreground flex text-sm">
-          <Button className="cursor-pointer" variant={"ghost"}>
-            수정
-          </Button>
-          <Button className="cursor-pointer" variant={"ghost"}>
-            삭제
-          </Button>
+          {UserId === post.author.id && <EditButton {...post} />}
+          {UserId === post.author.id && <DeleteButton post={post} />}
         </div>
       </div>
 

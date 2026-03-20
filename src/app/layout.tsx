@@ -1,11 +1,11 @@
-import { createWithdImagesAction } from "@/actions/post";
-import PostEditModal from "@/components/modal/posteditmodal";
+import { createWithdImagesAction, updatePostAction } from "@/actions/post";
+import AlertModal from "@/components/modal/alert-modal";
+import PostEditModal from "@/components/modal/post-edit-modal";
 import { SunIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
 import Providers from "./provider";
-import AlertModal from "@/components/modal/alert-modal";
 
 export default function RootLayout({
   children,
@@ -43,7 +43,10 @@ export default function RootLayout({
               @이영찬
             </footer>
           </div>
-          <PostEditModal createWithdImagesAction={createWithdImagesAction} />
+          <PostEditModal
+            createWithdImagesAction={createWithdImagesAction}
+            updatePostAction={updatePostAction}
+          />
           <AlertModal />
           <div id="modal-root" />
         </Providers>

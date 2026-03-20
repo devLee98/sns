@@ -111,3 +111,12 @@ export async function updatePasswordAction(formData: FormData) {
   }
   redirect("/");
 }
+
+export async function getUserAction() {
+  const supabase = createClient(await cookies());
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return user;
+}

@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@/lib/server";
 import { cookies } from "next/headers";
 
@@ -9,7 +11,7 @@ export async function uploadImageAction({
   filePath: string;
 }) {
   const supabase = createClient(await cookies());
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from("uploads")
     .upload(filePath, file);
   if (error) {
@@ -20,4 +22,17 @@ export async function uploadImageAction({
   } = supabase.storage.from("uploads").getPublicUrl(filePath);
 
   return publicUrl;
+}
+
+export async function deleteImageAction(filePath: string) {
+  const supabase = createClient(await cookies());
+  const { data, error: fetchFilesError } = await supabase.storage
+    .from("uploads")
+    .list(filePath);
+  if (fetchFilesError) throw new Error(fetchFilesError.message);
+
+  const { error } = await supabase.storage
+    .from("uploads")
+    .remove(data.map((file) => `${filePath}/${file.name}`));
+  if (error) throw new Error(error.message);
 }

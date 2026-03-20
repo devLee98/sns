@@ -1,15 +1,38 @@
 import { create } from "zustand";
 import { combine, devtools } from "zustand/middleware";
 
+type CreateMode = {
+  type: "CREATE";
+  isOpen: true;
+};
+
+type EditMode = {
+  type: "EDIT";
+  isOpen: true;
+  postId: number;
+  content: string;
+  imageUrls: string[] | null;
+};
+
+type CloseState = {
+  isOpen: false;
+};
+
+type OpenState = CreateMode | EditMode;
+
+type State = CloseState | OpenState;
+
 const initialState = {
   isOpen: false,
-};
+} as State;
 
 const usePostEditModalStore = create(
   devtools(
     combine(initialState, (set) => ({
       actions: {
-        open: () => set({ isOpen: true }),
+        openCreate: () => set({ type: "CREATE", isOpen: true }),
+        openEdit: (params: Omit<EditMode, "isOpen" | "type">) =>
+          set({ type: "EDIT", isOpen: true, ...params }),
         close: () => set({ isOpen: false }),
       },
     })),
@@ -17,9 +40,14 @@ const usePostEditModalStore = create(
   ),
 );
 
-export const useOpenPostEditModal = () => {
-  const open = usePostEditModalStore((state) => state.actions.open);
-  return open;
+export const useOpenCreatePostEditModal = () => {
+  const openCreate = usePostEditModalStore((state) => state.actions.openCreate);
+  return openCreate;
+};
+
+export const useOpenEditPostEditModal = () => {
+  const openEdit = usePostEditModalStore((state) => state.actions.openEdit);
+  return openEdit;
 };
 
 export const useClosePostEditModal = () => {
@@ -27,10 +55,15 @@ export const useClosePostEditModal = () => {
   return close;
 };
 
+// export const usePostEditModal = () => {
+//   const {
+//     isOpen,
+//     actions: { openCreate, openEdit, close },
+//   } = usePostEditModalStore();
+//   return { isOpen, openCreate, openEdit, close };
+// };
+
 export const usePostEditModal = () => {
-  const {
-    isOpen,
-    actions: { open, close },
-  } = usePostEditModalStore();
-  return { isOpen, open, close };
+  const store = usePostEditModalStore();
+  return store as typeof store & State;
 };

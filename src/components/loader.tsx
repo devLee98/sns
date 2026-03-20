@@ -1,5 +1,5 @@
 ﻿export default function Loader() {
-  const items = Array.from({ length: 3 }, (_, index) => index);
+  const items = Array.from({ length: 2 }, (_, index) => index);
 
   return (
     <div className="flex flex-col gap-8">
