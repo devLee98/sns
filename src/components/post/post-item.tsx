@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -7,6 +6,7 @@ import {
 import type { Post } from "@/lib/types";
 import { HeartIcon, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import DeleteButton from "./delete-button";
 import EditButton from "./edit-button";
 
 export default function PostItem(post: Post) {
@@ -33,9 +33,7 @@ export default function PostItem(post: Post) {
 
         <div className="text-muted-foreground flex text-sm">
           <EditButton {...post} />
-          <Button className="cursor-pointer" variant={"ghost"}>
-            삭제
-          </Button>
+          <DeleteButton post={post} />
         </div>
       </div>
 
