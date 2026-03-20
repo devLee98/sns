@@ -11,16 +11,18 @@ import PostItem from "./post-item";
 type Props = {
   initialPosts: Post[];
   initialNextCursor: number | null;
+  UserId: string;
 };
 
 export default function PostFeedClient({
   initialPosts,
   initialNextCursor,
+  UserId,
 }: Props) {
   const { ref, inView } = useInView();
   const { data, fetchNextPage, isFetchingNextPage, error, hasNextPage } =
     useInfinitePostData({ initialPosts, initialNextCursor });
-  console.log(data);
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -45,7 +47,7 @@ export default function PostFeedClient({
   return (
     <div className="flex flex-col gap-10">
       {posts.map((post) => (
-        <PostItem key={post.id} {...post} />
+        <PostItem key={post.id} post={post} UserId={UserId} />
       ))}
       {isFetchingNextPage && <Loader />}
       <div ref={ref}></div>
