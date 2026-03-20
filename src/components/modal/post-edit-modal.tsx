@@ -4,6 +4,7 @@ import { useOpenAlertModal } from "@/app/store/alert-modal";
 import { usePostEditModal } from "@/app/store/post-edit-modal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { PostEntity } from "@/lib/types";
 import { ImageIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -17,12 +18,16 @@ type Image = {
 
 export default function PostEditModal({
   createWithdImagesAction,
+  updatePostAction,
 }: {
   createWithdImagesAction: (formData: FormData) => Promise<void>;
+  updatePostAction: (
+    post: Partial<PostEntity> & { id: number },
+  ) => Promise<PostEntity>;
 }) {
-  const { isOpen, close } = usePostEditModal();
+  const postEditModal = usePostEditModal();
   const openAlertModal = useOpenAlertModal();
-
+  const isEdit = postEditModal.isOpen && postEditModal.type === "EDIT";
   const [content, setContent] = useState("");
   const [images, setImages] = useState<Image[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -30,7 +35,7 @@ export default function PostEditModal({
   const resetAndCloseModal = () => {
     setContent("");
     setImages([]);
-    close();
+    postEditModal.actions.close();
   };
   const handleCloseModal = () => {
     if (content !== "" || images.length > 0) {
@@ -68,6 +73,17 @@ export default function PostEditModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (postEditModal.isOpen && postEditModal.type === "EDIT") {
+      await updatePostAction({
+        id: postEditModal.postId,
+        content,
+      });
+      resetAndCloseModal();
+      return;
+    }
+
+    // CREATE
     const formData = new FormData();
     formData.append("content", content);
     images.forEach((img) => formData.append("image", img.file));
@@ -83,11 +99,11 @@ export default function PostEditModal({
   }, [content]);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!postEditModal.isOpen) {
       images.forEach((image) => URL.revokeObjectURL(image.previewUrl)); //메모리 누수 방지
       return;
     }
-  }, [isOpen, images]);
+  }, [postEditModal.isOpen, images]);
 
   // 서버에서는 바로 null 반환 (document 없음)
   if (typeof window === "undefined") {
@@ -100,7 +116,7 @@ export default function PostEditModal({
 
   return createPortal(
     <Dialog
-      open={isOpen}
+      open={postEditModal.isOpen}
       onOpenChange={(open) => {
         if (!open) handleCloseModal();
       }}
@@ -109,9 +125,10 @@ export default function PostEditModal({
         <DialogTitle>포스트 작성</DialogTitle>
         <form id="post-edit-form" onSubmit={handleSubmit}>
           <textarea
+            key={isEdit ? `edit-${postEditModal.postId}` : "create"}
+            defaultValue={isEdit ? postEditModal.content : ""}
             ref={textareaRef}
             name="content"
-            value={content}
             onChange={(e) => setContent(e.target.value)}
             className="max-h-125 min-h-25 w-full focus:outline-none"
             placeholder="무슨 일이 있었나요?"
@@ -125,6 +142,26 @@ export default function PostEditModal({
             className="hidden"
           />
         </form>
+        {postEditModal.isOpen && postEditModal.type === "EDIT" && (
+          <Carousel className="flex flex-wrap gap-2">
+            <CarouselContent>
+              {postEditModal.imageUrls?.map((url) => (
+                <CarouselItem className="basis-2/5" key={url}>
+                  <div className="relative">
+                    <Image
+                      src={url}
+                      alt={url}
+                      width={600}
+                      height={600}
+                      className="rounded-sm object-cover"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        )}
+
         {images.length > 0 && (
           <Carousel className="flex flex-wrap gap-2">
             <CarouselContent>
@@ -150,14 +187,16 @@ export default function PostEditModal({
             </CarouselContent>
           </Carousel>
         )}
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          onClick={() => imageInputRef.current?.click()}
-        >
-          <ImageIcon />
-          이미지 추가
-        </Button>
+        {postEditModal.isOpen && postEditModal.type === "CREATE" && (
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={() => imageInputRef.current?.click()}
+          >
+            <ImageIcon />
+            이미지 추가
+          </Button>
+        )}
         <Button className="cursor-pointer" type="submit" form="post-edit-form">
           저장
         </Button>

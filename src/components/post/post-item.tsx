@@ -7,6 +7,7 @@ import {
 import type { Post } from "@/lib/types";
 import { HeartIcon, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import EditButton from "./edit-button";
 
 export default function PostItem(post: Post) {
   return (
@@ -31,9 +32,7 @@ export default function PostItem(post: Post) {
         </div>
 
         <div className="text-muted-foreground flex text-sm">
-          <Button className="cursor-pointer" variant={"ghost"}>
-            수정
-          </Button>
+          <EditButton {...post} />
           <Button className="cursor-pointer" variant={"ghost"}>
             삭제
           </Button>
