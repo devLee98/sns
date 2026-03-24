@@ -3,19 +3,28 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import type { Post } from "@/lib/types";
-import { HeartIcon, MessageCircle } from "lucide-react";
+import { usePostById } from "@/hooks/queries/use-post-by-id";
+import { HeartIcon, Loader, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import DeleteButton from "./delete-button";
 import EditButton from "./edit-button";
+import Fallback from "../fallback";
 
 export default function PostItem({
-  post,
+  postId,
   UserId,
 }: {
-  post: Post;
+  postId: number;
   UserId: string;
 }) {
+  const {
+    data: post,
+    isPending,
+    error,
+  } = usePostById({ postId, type: "FEED" });
+  if (isPending) return <Loader />;
+  if (error) return <Fallback />;
+
   return (
     <div className="flex flex-col gap-4 border-b pb-8">
       <div className="flex justify-between">

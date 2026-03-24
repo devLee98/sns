@@ -29,3 +29,14 @@ export async function fetchPostsClient({
 
   return { posts, nextCursor };
 }
+
+export async function fetchPostByIdClient(postId: number) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("post")
+    .select("*, author: profile!author_id(*)")
+    .eq("id", postId)
+    .single();
+  if (error) throw new Error(error.message);
+  return data;
+}
