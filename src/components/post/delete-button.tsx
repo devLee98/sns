@@ -1,10 +1,13 @@
 import { deleteImageAction } from "@/actions/image";
 import { deletePostAction } from "@/actions/post";
 import { useOpenAlertModal } from "@/app/store/alert-modal";
+import { QUERY_KEYS } from "@/lib/constants";
 import { Post } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 
 export default function DeleteButton({ post }: { post: Post }) {
+  const queryClient = useQueryClient();
   const openAlertModal = useOpenAlertModal();
   const handleDeleteClick = async () => {
     openAlertModal({
@@ -16,6 +19,7 @@ export default function DeleteButton({ post }: { post: Post }) {
         if (post.image_urls?.length) {
           await deleteImageAction(`${post.author.id}/${post.id}`);
         }
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.post.list });
       },
     });
   };

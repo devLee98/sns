@@ -37,5 +37,6 @@ export default function useInfinitePostData({
       ],
       pageParams: [null as number | null],
     },
+    staleTime: Infinity,
   });
 }

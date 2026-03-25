@@ -6,9 +6,9 @@ import {
 import { usePostById } from "@/hooks/queries/use-post-by-id";
 import { HeartIcon, Loader, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import Fallback from "../fallback";
 import DeleteButton from "./delete-button";
 import EditButton from "./edit-button";
-import Fallback from "../fallback";
 
 export default function PostItem({
   postId,
