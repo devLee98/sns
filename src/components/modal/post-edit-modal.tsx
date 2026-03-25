@@ -4,7 +4,9 @@ import { useOpenAlertModal } from "@/app/store/alert-modal";
 import { usePostEditModal } from "@/app/store/post-edit-modal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { QUERY_KEYS } from "@/lib/constants";
 import { PostEntity } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { ImageIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -25,6 +27,7 @@ export default function PostEditModal({
     post: Partial<PostEntity> & { id: number },
   ) => Promise<PostEntity>;
 }) {
+  const queryClient = useQueryClient();
   const postEditModal = usePostEditModal();
   const openAlertModal = useOpenAlertModal();
   const isEdit = postEditModal.isOpen && postEditModal.type === "EDIT";
@@ -79,6 +82,7 @@ export default function PostEditModal({
         id: postEditModal.postId,
         content,
       });
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.post.list });
       resetAndCloseModal();
       return;
     }
@@ -88,6 +92,7 @@ export default function PostEditModal({
     formData.append("content", content);
     images.forEach((img) => formData.append("image", img.file));
     await createWithdImagesAction(formData);
+    await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.post.list });
     resetAndCloseModal();
   };
 

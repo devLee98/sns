@@ -1,0 +1,17 @@
+import { fetchPostByIdClient } from "@/lib/client-queries/post";
+import { QUERY_KEYS } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+
+export function usePostById({
+  postId,
+  type,
+}: {
+  postId: number;
+  type: "FEED" | "DETAIL";
+}) {
+  return useQuery({
+    queryKey: QUERY_KEYS.post.byId(postId),
+    queryFn: () => fetchPostByIdClient(postId),
+    enabled: type === "FEED" ? false : true,
+  });
+}
