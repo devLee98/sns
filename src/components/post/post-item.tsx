@@ -1,10 +1,11 @@
+import Loader from "@/components/loader";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
 import { usePostById } from "@/hooks/queries/use-post-by-id";
-import { HeartIcon, Loader, MessageCircle } from "lucide-react";
+import { HeartIcon, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Fallback from "../fallback";
 import DeleteButton from "./delete-button";
