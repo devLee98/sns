@@ -5,9 +5,11 @@ import { toast } from "sonner";
 export default function LikePostButton({
   id,
   likeCount,
+  isLiked,
 }: {
   id: number;
   likeCount: number;
+  isLiked: boolean;
 }) {
   const { mutate: togglePostLike } = useTogglePostLike({
     onError: () => {
@@ -18,8 +20,13 @@ export default function LikePostButton({
     togglePostLike({ postId: id });
   };
   return (
-    <div className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border p-2 px-4 text-sm">
-      <HeartIcon className="h-4 w-4" onClick={handleLikeClick} />
+    <div
+      className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border p-2 px-4 text-sm"
+      onClick={handleLikeClick}
+    >
+      <HeartIcon
+        className={`h-4 w-4 ${isLiked ? "fill-red-500 text-red-500" : ""}`}
+      />
       <span>{likeCount}</span>
     </div>
   );

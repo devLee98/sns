@@ -14,10 +14,10 @@ import LikePostButton from "./like-post-button";
 
 export default function PostItem({
   postId,
-  UserId,
+  userId,
 }: {
   postId: number;
-  UserId: string;
+  userId: string;
 }) {
   const {
     data: post,
@@ -49,8 +49,8 @@ export default function PostItem({
         </div>
 
         <div className="text-muted-foreground flex text-sm">
-          {UserId === post.author.id && <EditButton {...post} />}
-          {UserId === post.author.id && <DeleteButton post={post} />}
+          {userId === post.author.id && <EditButton {...post} />}
+          {userId === post.author.id && <DeleteButton post={post} />}
         </div>
       </div>
 
@@ -79,7 +79,11 @@ export default function PostItem({
       </div>
 
       <div className="flex gap-2">
-        <LikePostButton id={post.id} likeCount={post.like_count} />
+        <LikePostButton
+          id={post.id}
+          likeCount={post.like_count}
+          isLiked={post.isLiked}
+        />
 
         <div className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border p-2 px-4 text-sm">
           <MessageCircle className="h-4 w-4" />
