@@ -1,6 +1,7 @@
 ﻿"use server";
 
 import { createClient } from "@/lib/server";
+import { getCurrentUser } from "@/lib/server-auth";
 import { PostEntity } from "@/lib/types";
 import { cookies } from "next/headers";
 import { uploadImageAction } from "./image";
@@ -87,6 +88,21 @@ export async function deletePostAction(id: number) {
     .eq("id", id)
     .select()
     .single();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function togglePostLikeAction({ postId }: { postId: number }) {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const supabase = createClient(await cookies());
+  const { data, error } = await supabase.rpc("toggle_post_like", {
+    p_post_id: postId,
+    p_user_id: user.id,
+  });
   if (error) throw new Error(error.message);
   return data;
 }
