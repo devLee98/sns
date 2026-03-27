@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Loader from "@/components/loader";
 import useInfinitePostData from "@/hooks/queries/use-infinite-post-data";
@@ -13,18 +13,18 @@ import PostItem from "./post-item";
 type Props = {
   initialPosts: Post[];
   initialNextCursor: number | null;
-  UserId: string;
+  userId: string;
 };
 
 export default function PostFeedClient({
   initialPosts,
   initialNextCursor,
-  UserId,
+  userId,
 }: Props) {
   const queryClient = useQueryClient();
   const { ref, inView } = useInView();
   const { data, fetchNextPage, isFetchingNextPage, error, hasNextPage } =
-    useInfinitePostData({ initialPosts, initialNextCursor });
+    useInfinitePostData({ initialPosts, initialNextCursor, userId });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -57,7 +57,7 @@ export default function PostFeedClient({
   return (
     <div className="flex flex-col gap-10">
       {postIds.map((postId) => (
-        <PostItem key={postId} postId={postId} UserId={UserId} />
+        <PostItem key={postId} postId={postId} userId={userId} />
       ))}
       {isFetchingNextPage && <Loader />}
       <div ref={ref}></div>

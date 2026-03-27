@@ -1,22 +1,23 @@
-import Loader from "@/components/loader";
+﻿import Loader from "@/components/loader";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
 import { usePostById } from "@/hooks/queries/use-post-by-id";
-import { HeartIcon, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Fallback from "../fallback";
 import DeleteButton from "./delete-button";
 import EditButton from "./edit-button";
+import LikePostButton from "./like-post-button";
 
 export default function PostItem({
   postId,
-  UserId,
+  userId,
 }: {
   postId: number;
-  UserId: string;
+  userId: string;
 }) {
   const {
     data: post,
@@ -48,8 +49,8 @@ export default function PostItem({
         </div>
 
         <div className="text-muted-foreground flex text-sm">
-          {UserId === post.author.id && <EditButton {...post} />}
-          {UserId === post.author.id && <DeleteButton post={post} />}
+          {userId === post.author.id && <EditButton {...post} />}
+          {userId === post.author.id && <DeleteButton post={post} />}
         </div>
       </div>
 
@@ -78,10 +79,11 @@ export default function PostItem({
       </div>
 
       <div className="flex gap-2">
-        <div className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border p-2 px-4 text-sm">
-          <HeartIcon className="h-4 w-4" />
-          <span>0</span>
-        </div>
+        <LikePostButton
+          id={post.id}
+          likeCount={post.like_count}
+          isLiked={post.isLiked}
+        />
 
         <div className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border p-2 px-4 text-sm">
           <MessageCircle className="h-4 w-4" />

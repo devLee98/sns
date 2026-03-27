@@ -1,6 +1,7 @@
 ﻿"use server";
 
 import { createClient } from "@/lib/server";
+import { getCurrentUser } from "@/lib/server-auth";
 import { getRandomNickname } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -113,10 +114,5 @@ export async function updatePasswordAction(formData: FormData) {
 }
 
 export async function getUserAction() {
-  const supabase = createClient(await cookies());
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return user;
+  return getCurrentUser();
 }

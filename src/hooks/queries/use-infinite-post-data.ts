@@ -6,17 +6,23 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 type UseInfinitePostDataParams = {
   initialPosts: Post[];
   initialNextCursor: number | null;
+  userId: string;
 };
 
 export default function useInfinitePostData({
   initialPosts,
   initialNextCursor,
+  userId,
 }: UseInfinitePostDataParams) {
   const queryClient = useQueryClient();
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.post.list,
     queryFn: async ({ pageParam }: { pageParam: number | null }) => {
-      const data = await fetchPostsClient({ cursor: pageParam, limit: 5 });
+      const data = await fetchPostsClient({
+        cursor: pageParam,
+        limit: 5,
+        userId,
+      });
       data.posts.forEach((post) => {
         queryClient.setQueryData(QUERY_KEYS.post.byId(post.id), post);
       });
